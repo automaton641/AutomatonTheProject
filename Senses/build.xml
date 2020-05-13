@@ -1,0 +1,31 @@
+<project name="Senses" basedir="." default="main">
+
+    <property name="senses.src.dir"     value="src"/>
+
+    <property name="senses.build.dir"   value="build"/>
+    <property name="senses.classes.dir" value="${senses.build.dir}/classes"/>
+    <property name="senses.jar.dir"     value="${senses.build.dir}/jar"/>
+
+
+    <target name="clean">
+        <delete dir="${senses.build.dir}"/>
+    </target>
+
+    <target name="compile">
+        <mkdir dir="${senses.classes.dir}"/>
+        <javac includeantruntime="false" srcdir="${senses.src.dir}" destdir="${senses.classes.dir}"/>
+    </target>
+
+    <target name="jar" depends="compile">
+        <mkdir dir="${senses.jar.dir}"/>
+        <jar destfile="${senses.jar.dir}/${ant.project.name}.jar" basedir="${senses.classes.dir}">
+            <manifest>
+            </manifest>
+        </jar>
+    </target>
+
+    <target name="clean-build" depends="clean,jar"/>
+
+    <target name="main" depends="jar"/>
+
+</project>

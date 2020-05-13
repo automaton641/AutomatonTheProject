@@ -1,0 +1,50 @@
+<project name="Terminal" basedir="." default="main">
+
+    <property name="terminal.src.dir"     value="src"/>
+
+    <property name="terminal.build.dir"   value="build"/>
+    <property name="terminal.classes.dir" value="${terminal.build.dir}/classes"/>
+    <property name="terminal.jar.dir"     value="${terminal.build.dir}/jar"/>
+    <property name="terminal.lib.dir"     value="lib"/>
+
+    <property name="terminal.main-class"  value="automaton641.project.terminal.Main"/>
+
+
+
+    <target name="clean">
+        <delete dir="${terminal.build.dir}"/>
+    </target>
+
+    <target name="compile" depends="Senses">
+        <mkdir dir="${terminal.classes.dir}"/>
+        <javac includeantruntime="false" srcdir="${terminal.src.dir}" destdir="${terminal.classes.dir}">
+            <classpath>
+                <pathelement path="lib/Senses.jar"/>
+            </classpath>
+        </javac>
+    </target>
+
+    <target name="Senses">
+        <ant dir="../Senses" target="main"/>
+        <copy file="../Senses/build/jar/Senses.jar" todir="${terminal.lib.dir}" overwrite="false"/>
+    </target>
+
+    <target name="jar" depends="compile">
+        <mkdir dir="${terminal.jar.dir}"/>
+        <jar destfile="${terminal.jar.dir}/${ant.project.name}.jar" basedir="${terminal.classes.dir}">
+            <zipgroupfileset dir="lib" includes="Senses.jar" />
+            <manifest>
+                <attribute name="Main-Class" value="${terminal.main-class}"/>
+            </manifest>
+        </jar>
+    </target>
+
+    <target name="run" depends="jar">
+        <java jar="${terminal.jar.dir}/${ant.project.name}.jar" fork="true"/>
+    </target>
+
+    <target name="clean-build" depends="clean,jar"/>
+
+    <target name="main" depends="run"/>
+
+</project>
